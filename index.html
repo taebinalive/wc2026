@@ -1,0 +1,249 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>2026 월드컵 조별 순위</title>
+<style>
+:root{
+  --bg:#0f1420; --card:#1a2130; --card2:#151b27; --line:#2a3346;
+  --txt:#e8edf5; --muted:#8a94a8; --head:#aeb8cc;
+  --q1:#2fb872; --q1b:rgba(47,184,114,.14);
+  --q3:#3d8bfd; --q3b:rgba(61,139,253,.14);
+  --out3:#f0a13a; --out3b:rgba(240,161,58,.13);
+  --out:#5b6577; --outb:rgba(91,101,119,.10);
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--txt);
+  font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Segoe UI",Roboto,sans-serif;
+  -webkit-font-smoothing:antialiased;padding:28px 20px 60px}
+.wrap{max-width:1320px;margin:0 auto}
+header.top{margin-bottom:18px}
+h1{font-size:26px;margin:0 0 8px;letter-spacing:-.3px}
+.sub{color:var(--muted);font-size:13.5px;line-height:1.6}
+.sub b{color:var(--head);font-weight:600}
+.legend{display:flex;flex-wrap:wrap;gap:14px;margin:14px 0 24px;font-size:12.5px}
+.legend span{display:inline-flex;align-items:center;gap:7px;color:var(--head)}
+.dot{width:11px;height:11px;border-radius:3px;display:inline-block}
+.dot.q1{background:var(--q1)} .dot.q3{background:var(--q3)}
+.dot.out3{background:var(--out3)} .dot.out{background:var(--out)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(310px,1fr));gap:16px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.card h2{margin:0;padding:12px 16px;font-size:15px;letter-spacing:.4px;
+  background:var(--card2);border-bottom:1px solid var(--line);color:var(--head)}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{color:var(--muted);font-weight:500;font-size:11px;text-align:center;padding:7px 4px;
+  border-bottom:1px solid var(--line)}
+th.team,td.team{text-align:left}
+td{padding:9px 4px;text-align:center;border-bottom:1px solid rgba(42,51,70,.5);white-space:nowrap}
+tr:last-child td{border-bottom:none}
+td.rank{width:26px;color:var(--muted);font-variant-numeric:tabular-nums}
+td.team{padding-left:10px;font-weight:500}
+td.team .fl{margin-right:7px;font-size:15px}
+td.team .ab{color:var(--muted);font-size:11px;margin-left:6px;font-weight:400}
+td.pts{font-weight:700;font-variant-numeric:tabular-nums}
+td.num{font-variant-numeric:tabular-nums;color:#cfd6e4}
+.tag{font-size:10px;padding:2px 6px;border-radius:5px;font-weight:600}
+tr.q1{box-shadow:inset 3px 0 0 var(--q1)} tr.q1{background:var(--q1b)}
+tr.q3{box-shadow:inset 3px 0 0 var(--q3);background:var(--q3b)}
+tr.out3{box-shadow:inset 3px 0 0 var(--out3);background:var(--out3b)}
+tr.out{box-shadow:inset 3px 0 0 var(--out);background:var(--outb)}
+.tag.q1{background:var(--q1b);color:var(--q1)} .tag.q3{background:var(--q3b);color:var(--q3)}
+.tag.out3{background:var(--out3b);color:var(--out3)} .tag.out{background:var(--outb);color:var(--muted)}
+section.thirds{margin-top:34px}
+section.thirds h2{font-size:18px;margin:0 0 4px}
+section.thirds .sub{margin-bottom:14px}
+.tbl3{background:var(--card);border:1px solid var(--line);border-radius:14px;overflow:hidden;max-width:640px}
+.tbl3 table{font-size:13.5px}
+.tbl3 td,.tbl3 th{padding:10px 12px;text-align:center}
+.tbl3 td.team,.tbl3 th.team{text-align:left}
+tr.cut td{border-bottom:2px dashed var(--q3)}
+.cutlabel{font-size:11px;color:var(--q3);padding:6px 12px;background:var(--q3b)}
+footer{margin-top:34px;color:var(--muted);font-size:11.5px;line-height:1.7}
+.livestatus{color:var(--muted);font-size:12.5px}
+.livestatus.on{color:#ff6b6b;font-weight:600}
+.livebar{display:flex;flex-wrap:wrap;gap:10px;margin:2px 0 22px}
+.livematch{display:inline-flex;align-items:center;gap:8px;background:var(--card);
+  border:1px solid #4a2230;border-radius:10px;padding:7px 12px;font-size:13px}
+.livematch b{font-variant-numeric:tabular-nums}
+.livematch .min{color:#ff5d5d;font-weight:700;font-variant-numeric:tabular-nums}
+.livedot{width:8px;height:8px;border-radius:50%;background:#ff4d4d;display:inline-block;animation:pulse 1.4s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.25}}
+tr.liverow .ab{color:#ff7a7a}
+.prov{color:#ff7a7a;font-size:10px;margin-left:6px;font-weight:600}
+.card h2 .glive{float:right;font-size:11px;color:#ff6b6b;font-weight:600;letter-spacing:0}
+</style></head>
+<body><div class="wrap">
+<header class="top">
+  <h1>🏆 2026 FIFA 월드컵 — 조별 순위</h1>
+  <div class="sub">
+    <b id="played">18</b>/72경기 진행 · 32강 진출: 조 1·2위 직행(24) + 3위 상위 8팀 = <b>32팀</b><br>
+    색상은 <b>현재 순위 기준</b> 진출 여부 · 베이스 갱신 <b>2026-06-17 11:23 KST</b> · 진행중 경기는 <b>잠정(🔴)</b>으로 반영<br>
+    <span id="livestatus" class="livestatus">라이브 연결 중…</span>
+  </div>
+  <div class="legend"><span><i class="dot q1"></i>조 1·2위 — 진출 확정</span><span><i class="dot q3"></i>조 3위 — 와일드카드 진출 (상위 8팀)</span><span><i class="dot out3"></i>조 3위 — 탈락 위기</span><span><i class="dot out"></i>조 4위 — 탈락권</span></div>
+</header>
+<div id="livewrap"></div>
+<div class="grid" id="grid"><div class="card"><h2>Group A</h2><table><tr><th class="rank">#</th><th class="team">팀</th><th>경기</th><th>승</th><th>무</th><th>패</th><th>득실</th><th>승점</th><th>32강</th></tr><tr class="q1"><td class="rank">1</td><td class="team" title="옐로 1 · 레드 1 · 행동점수 -5"><span class="fl">🇲🇽</span>멕시코<span class="ab">MEX</span></td><td class="num">1</td><td class="num">1</td><td class="num">0</td><td class="num">0</td><td class="num">+2</td><td class="pts">3</td><td><span class="tag q1">진출</span></td></tr><tr class="q1"><td class="rank">2</td><td class="team" title="옐로 1 · 레드 0 · 행동점수 -1"><span class="fl">🇰🇷</span>대한민국<span class="ab">KOR</span></td><td class="num">1</td><td class="num">1</td><td class="num">0</td><td class="num">0</td><td class="num">+1</td><td class="pts">3</td><td><span class="tag q1">진출</span></td></tr><tr class="out3"><td class="rank">3</td><td class="team" title="옐로 0 · 레드 0 · 행동점수 0"><span class="fl">🇨🇿</span>체코<span class="ab">CZE</span></td><td class="num">1</td><td class="num">0</td><td class="num">0</td><td class="num">1</td><td class="num">-1</td><td class="pts">0</td><td><span class="tag out3">탈락 위기</span></td></tr><tr class="out"><td class="rank">4</td><td class="team" title="옐로 2 · 레드 2 · 행동점수 -10"><span class="fl">🇿🇦</span>남아공<span class="ab">RSA</span></td><td class="num">1</td><td class="num">0</td><td class="num">0</td><td class="num">1</td><td class="num">-2</td><td class="pts">0</td><td><span class="tag out">탈락권</span></td></tr></table></div><div class="card"><h2>Group B</h2><table><tr><th class="rank">#</th><th class="team">팀</th><th>경기</th><th>승</th><th>무</th><th>패</th><th>득실</th><th>승점</th><th>32강</th></tr><tr class="q1"><td class="rank">1</td><td class="team" title="옐로 1 · 레드 0 · 행동점수 -1"><span class="fl">🇨🇭</span>스위스<span class="ab">SUI</span></td><td class="num">1</td><td class="num">0</td><td class="num">1</td><td class="num">0</td><td class="num">0</td><td class="pts">1</td><td><span class="tag q1">진출</span></td></tr><tr class="q1"><td class="rank">2</td><td class="team" title="옐로 2 · 레드 0 · 행동점수 -2"><span class="fl">🇨🇦</span>캐나다<span class="ab">CAN</span></td><td class="num">1</td><td class="num">0</td><td class="num">1</td><td class="num">0</td><td class="num">0</td><td class="pts">1</td><td><span class="tag q1">진출</span></td></tr><tr class="q3"><td class="rank">3</td><td class="team" title="옐로 2 · 레드 0 · 행동점수 -2"><span class="fl">🇶🇦</span>카타르<span class="ab">QAT</span></td><td class="num">1</td><td class="num">0</td><td class="num">1</td><td class="num">0</td><td class="num">0</td><td class="pts">1</td><td><span class="tag q3">3위 진출</span></td></tr><tr class="out"><td class="rank">4</td><td class="team" title="옐로 3 · 레드 0 · 행동점수 -3"><span class="fl">🇧🇦</span>보스니아<span class="ab">BIH</span></td><td class="num">1</td><td class="num">0</td><td class="num">1</td><td class="num">0</td><td class="num">0</td><td class="pts">1</td><td><span class="tag out">탈락권</span></td></tr></table></div><div class="card"><h2>Group C</h2><table><tr><th class="rank">#</th><th class="team">팀</th><th>경기</th><th>승</th><th>무</th><th>패</th><th>득실</th><th>승점</th><th>32강</th></tr><tr class="q1"><td class="rank">1</td><td class="team" title="옐로 3 · 레드 0 · 행동점수 -3"><span class="fl">🏴󠁧󠁢󠁳󠁣󠁴󠁿</span>스코틀랜드<span class="ab">SCO</span></td><td class="num">1</td><td class="num">1</td><td class="num">0</td><td class="num">0</td><td class="num">+1</td><td class="pts">3</td><td><span class="tag q1">진출</span></td></tr><tr class="q1"><td class="rank">2</td><td class="team" title="옐로 0 · 레드 0 · 행동점수 0"><span class="fl">🇲🇦</span>모로코<span class="ab">MAR</span></td><td class="num">1</td><td class="num">0</td><td class="num">1</td><td class="num">0</td><td class="num">0</td><td class="pts">1</td><td><span class="tag q1">진출</span></td></tr><tr class="q3"><td class="rank">3</td><td class="team" title="옐로 2 · 레드 0 · 행동점수 -2"><span class="fl">🇧🇷</span>브라질<span class="ab">BRA</span></td><td class="num">1</td><td class="num">0</td><td class="num">1</td><td class="num">0</td><td class="num">0</td><td class="pts">1</td><td><span class="tag q3">3위 진출</span></td></tr><tr class="out"><td class="rank">4</td><td class="team" title="옐로 1 · 레드 0 · 행동점수 -1"><span class="fl">🇭🇹</span>아이티<span class="ab">HAI</span></td><td class="num">1</td><td class="num">0</td><td class="num">0</td><td class="num">1</td><td class="num">-1</td><td class="pts">0</td><td><span class="tag out">탈락권</span></td></tr></table></div><div class="card"><h2>Group D</h2><table><tr><th class="rank">#</th><th class="team">팀</th><th>경기</th><th>승</th><th>무</th><th>패</th><th>득실</th><th>승점</th><th>32강</th></tr><tr class="q1"><td class="rank">1</td><td class="team" title="옐로 1 · 레드 0 · 행동점수 -1"><span class="fl">🇺🇸</span>미국<span class="ab">USA</span></td><td class="num">1</td><td class="num">1</td><td class="num">0</td><td class="num">0</td><td class="num">+3</td><td class="pts">3</td><td><span class="tag q1">진출</span></td></tr><tr class="q1"><td class="rank">2</td><td class="team" title="옐로 0 · 레드 0 · 행동점수 0"><span class="fl">🇦🇺</span>호주<span class="ab">AUS</span></td><td class="num">1</td><td class="num">1</td><td class="num">0</td><td class="num">0</td><td class="num">+2</td><td class="pts">3</td><td><span class="tag q1">진출</span></td></tr><tr class="out3"><td class="rank">3</td><td class="team" title="옐로 1 · 레드 0 · 행동점수 -1"><span class="fl">🇹🇷</span>튀르키예<span class="ab">TUR</span></td><td class="num">1</td><td class="num">0</td><td class="num">0</td><td class="num">1</td><td class="num">-2</td><td class="pts">0</td><td><span class="tag out3">탈락 위기</span></td></tr><tr class="out"><td class="rank">4</td><td class="team" title="옐로 5 · 레드 0 · 행동점수 -5"><span class="fl">🇵🇾</span>파라과이<span class="ab">PAR</span></td><td class="num">1</td><td class="num">0</td><td class="num">0</td><td class="num">1</td><td class="num">-3</td><td class="pts">0</td><td><span class="tag out">탈락권</span></td></tr></table></div><div class="card"><h2>Group E</h2><table><tr><th class="rank">#</th><th class="team">팀</th><th>경기</th><th>승</th><th>무</th><th>패</th><th>득실</th><th>승점</th><th>32강</th></tr><tr class="q1"><td class="rank">1</td><td class="team" title="옐로 0 · 레드 0 · 행동점수 0"><span class="fl">🇩🇪</span>독일<span class="ab">GER</span></td><td class="num">1</td><td class="num">1</td><td class="num">0</td><td class="num">0</td><td class="num">+6</td><td class="pts">3</td><td><span class="tag q1">진출</span></td></tr><tr class="q1"><td class="rank">2</td><td class="team" title="옐로 3 · 레드 0 · 행동점수 -3"><span class="fl">🇨🇮</span>코트디부아르<span class="ab">CIV</span></td><td class="num">1</td><td class="num">1</td><td class="num">0</td><td class="num">0</td><td class="num">+1</td><td class="pts">3</td><td><span class="tag q1">진출</span></td></tr><tr class="out3"><td class="rank">3</td><td class="team" title="옐로 1 · 레드 0 · 행동점수 -1"><span class="fl">🇪🇨</span>에콰도르<span class="ab">ECU</span></td><td class="num">1</td><td class="num">0</td><td class="num">0</td><td class="num">1</td><td class="num">-1</td><td class="pts">0</td><td><span class="tag out3">탈락 위기</span></td></tr><tr class="out"><td class="rank">4</td><td class="team" title="옐로 0 · 레드 0 · 행동점수 0"><span class="fl">🇨🇼</span>퀴라소<span class="ab">CUW</span></td><td class="num">1</td><td class="num">0</td><td class="num">0</td><td class="num">1</td><td class="num">-6</td><td class="pts">0</td><td><span class="tag out">탈락권</span></td></tr></table></div><div class="card"><h2>Group F</h2><table><tr><th class="rank">#</th><th class="team">팀</th><th>경기</th><th>승</th><th>무</th><th>패</th><th>득실</th><th>승점</th><th>32강</th></tr><tr class="q1"><td class="rank">1</td><td class="team" title="옐로 0 · 레드 0 · 행동점수 0"><span class="fl">🇸🇪</span>스웨덴<span class="ab">SWE</span></td><td class="num">1</td><td class="num">1</td><td class="num">0</td><td class="num">0</td><td class="num">+4</td><td class="pts">3</td><td><span class="tag q1">진출</span></td></tr><tr class="q1"><td class="rank">2</td><td class="team" title="옐로 0 · 레드 0 · 행동점수 0"><span class="fl">🇯🇵</span>일본<span class="ab">JPN</span></td><td class="num">1</td><td class="num">0</td><td class="num">1</td><td class="num">0</td><td class="num">0</td><td class="pts">1</td><td><span class="tag q1">진출</span></td></tr><tr class="q3"><td class="rank">3</td><td class="team" title="옐로 3 · 레드 0 · 행동점수 -3"><span class="fl">🇳🇱</span>네덜란드<span class="ab">NED</span></td><td class="num">1</td><td class="num">0</td><td class="num">1</td><td class="num">0</td><td class="num">0</td><td class="pts">1</td><td><span class="tag q3">3위 진출</span></td></tr><tr class="out"><td class="rank">4</td><td class="team" title="옐로 1 · 레드 0 · 행동점수 -1"><span class="fl">🇹🇳</span>튀니지<span class="ab">TUN</span></td><td class="num">1</td><td class="num">0</td><td class="num">0</td><td class="num">1</td><td class="num">-4</td><td class="pts">0</td><td><span class="tag out">탈락권</span></td></tr></table></div><div class="card"><h2>Group G</h2><table><tr><th class="rank">#</th><th class="team">팀</th><th>경기</th><th>승</th><th>무</th><th>패</th><th>득실</th><th>승점</th><th>32강</th></tr><tr class="q1"><td class="rank">1</td><td class="team" title="옐로 0 · 레드 0 · 행동점수 0"><span class="fl">🇳🇿</span>뉴질랜드<span class="ab">NZL</span></td><td class="num">1</td><td class="num">0</td><td class="num">1</td><td class="num">0</td><td class="num">0</td><td class="pts">1</td><td><span class="tag q1">진출</span></td></tr><tr class="q1"><td class="rank">2</td><td class="team" title="옐로 1 · 레드 0 · 행동점수 -1"><span class="fl">🇮🇷</span>이란<span class="ab">IRN</span></td><td class="num">1</td><td class="num">0</td><td class="num">1</td><td class="num">0</td><td class="num">0</td><td class="pts">1</td><td><span class="tag q1">진출</span></td></tr><tr class="q3"><td class="rank">3</td><td class="team" title="옐로 2 · 레드 0 · 행동점수 -2"><span class="fl">🇧🇪</span>벨기에<span class="ab">BEL</span></td><td class="num">1</td><td class="num">0</td><td class="num">1</td><td class="num">0</td><td class="num">0</td><td class="pts">1</td><td><span class="tag q3">3위 진출</span></td></tr><tr class="out"><td class="rank">4</td><td class="team" title="옐로 2 · 레드 0 · 행동점수 -2"><span class="fl">🇪🇬</span>이집트<span class="ab">EGY</span></td><td class="num">1</td><td class="num">0</td><td class="num">1</td><td class="num">0</td><td class="num">0</td><td class="pts">1</td><td><span class="tag out">탈락권</span></td></tr></table></div><div class="card"><h2>Group H</h2><table><tr><th class="rank">#</th><th class="team">팀</th><th>경기</th><th>승</th><th>무</th><th>패</th><th>득실</th><th>승점</th><th>32강</th></tr><tr class="q1"><td class="rank">1</td><td class="team" title="옐로 0 · 레드 0 · 행동점수 0"><span class="fl">🇺🇾</span>우루과이<span class="ab">URU</span></td><td class="num">1</td><td class="num">0</td><td class="num">1</td><td class="num">0</td><td class="num">0</td><td class="pts">1</td><td><span class="tag q1">진출</span></td></tr><tr class="q1"><td class="rank">2</td><td class="team" title="옐로 1 · 레드 0 · 행동점수 -1"><span class="fl">🇸🇦</span>사우디아라비아<span class="ab">KSA</span></td><td class="num">1</td><td class="num">0</td><td class="num">1</td><td class="num">0</td><td class="num">0</td><td class="pts">1</td><td><span class="tag q1">진출</span></td></tr><tr class="q3"><td class="rank">3</td><td class="team" title="옐로 1 · 레드 0 · 행동점수 -1"><span class="fl">🇪🇸</span>스페인<span class="ab">ESP</span></td><td class="num">1</td><td class="num">0</td><td class="num">1</td><td class="num">0</td><td class="num">0</td><td class="pts">1</td><td><span class="tag q3">3위 진출</span></td></tr><tr class="out"><td class="rank">4</td><td class="team" title="옐로 1 · 레드 0 · 행동점수 -1"><span class="fl">🇨🇻</span>카보베르데<span class="ab">CPV</span></td><td class="num">1</td><td class="num">0</td><td class="num">1</td><td class="num">0</td><td class="num">0</td><td class="pts">1</td><td><span class="tag out">탈락권</span></td></tr></table></div><div class="card"><h2>Group I</h2><table><tr><th class="rank">#</th><th class="team">팀</th><th>경기</th><th>승</th><th>무</th><th>패</th><th>득실</th><th>승점</th><th>32강</th></tr><tr class="q1"><td class="rank">1</td><td class="team" title="옐로 0 · 레드 0 · 행동점수 0"><span class="fl">🇳🇴</span>노르웨이<span class="ab">NOR</span></td><td class="num">1</td><td class="num">1</td><td class="num">0</td><td class="num">0</td><td class="num">+3</td><td class="pts">3</td><td><span class="tag q1">진출</span></td></tr><tr class="q1"><td class="rank">2</td><td class="team" title="옐로 0 · 레드 0 · 행동점수 0"><span class="fl">🇫🇷</span>프랑스<span class="ab">FRA</span></td><td class="num">1</td><td class="num">1</td><td class="num">0</td><td class="num">0</td><td class="num">+2</td><td class="pts">3</td><td><span class="tag q1">진출</span></td></tr><tr class="out3"><td class="rank">3</td><td class="team" title="옐로 0 · 레드 0 · 행동점수 0"><span class="fl">🇸🇳</span>세네갈<span class="ab">SEN</span></td><td class="num">1</td><td class="num">0</td><td class="num">0</td><td class="num">1</td><td class="num">-2</td><td class="pts">0</td><td><span class="tag out3">탈락 위기</span></td></tr><tr class="out"><td class="rank">4</td><td class="team" title="옐로 1 · 레드 0 · 행동점수 -1"><span class="fl">🇮🇶</span>이라크<span class="ab">IRQ</span></td><td class="num">1</td><td class="num">0</td><td class="num">0</td><td class="num">1</td><td class="num">-3</td><td class="pts">0</td><td><span class="tag out">탈락권</span></td></tr></table></div><div class="card"><h2>Group J</h2><table><tr><th class="rank">#</th><th class="team">팀</th><th>경기</th><th>승</th><th>무</th><th>패</th><th>득실</th><th>승점</th><th>32강</th></tr><tr class="q1"><td class="rank">1</td><td class="team" title="옐로 0 · 레드 0 · 행동점수 0"><span class="fl">🇦🇷</span>아르헨티나<span class="ab">ARG</span></td><td class="num">0</td><td class="num">0</td><td class="num">0</td><td class="num">0</td><td class="num">0</td><td class="pts">0</td><td><span class="tag q1">진출</span></td></tr><tr class="q1"><td class="rank">2</td><td class="team" title="옐로 0 · 레드 0 · 행동점수 0"><span class="fl">🇦🇹</span>오스트리아<span class="ab">AUT</span></td><td class="num">0</td><td class="num">0</td><td class="num">0</td><td class="num">0</td><td class="num">0</td><td class="pts">0</td><td><span class="tag q1">진출</span></td></tr><tr class="q3"><td class="rank">3</td><td class="team" title="옐로 0 · 레드 0 · 행동점수 0"><span class="fl">🇩🇿</span>알제리<span class="ab">ALG</span></td><td class="num">0</td><td class="num">0</td><td class="num">0</td><td class="num">0</td><td class="num">0</td><td class="pts">0</td><td><span class="tag q3">3위 진출</span></td></tr><tr class="out"><td class="rank">4</td><td class="team" title="옐로 0 · 레드 0 · 행동점수 0"><span class="fl">🇯🇴</span>요르단<span class="ab">JOR</span></td><td class="num">0</td><td class="num">0</td><td class="num">0</td><td class="num">0</td><td class="num">0</td><td class="pts">0</td><td><span class="tag out">탈락권</span></td></tr></table></div><div class="card"><h2>Group K</h2><table><tr><th class="rank">#</th><th class="team">팀</th><th>경기</th><th>승</th><th>무</th><th>패</th><th>득실</th><th>승점</th><th>32강</th></tr><tr class="q1"><td class="rank">1</td><td class="team" title="옐로 0 · 레드 0 · 행동점수 0"><span class="fl">🇵🇹</span>포르투갈<span class="ab">POR</span></td><td class="num">0</td><td class="num">0</td><td class="num">0</td><td class="num">0</td><td class="num">0</td><td class="pts">0</td><td><span class="tag q1">진출</span></td></tr><tr class="q1"><td class="rank">2</td><td class="team" title="옐로 0 · 레드 0 · 행동점수 0"><span class="fl">🇨🇴</span>콜롬비아<span class="ab">COL</span></td><td class="num">0</td><td class="num">0</td><td class="num">0</td><td class="num">0</td><td class="num">0</td><td class="pts">0</td><td><span class="tag q1">진출</span></td></tr><tr class="q3"><td class="rank">3</td><td class="team" title="옐로 0 · 레드 0 · 행동점수 0"><span class="fl">🇺🇿</span>우즈베키스탄<span class="ab">UZB</span></td><td class="num">0</td><td class="num">0</td><td class="num">0</td><td class="num">0</td><td class="num">0</td><td class="pts">0</td><td><span class="tag q3">3위 진출</span></td></tr><tr class="out"><td class="rank">4</td><td class="team" title="옐로 0 · 레드 0 · 행동점수 0"><span class="fl">🇨🇩</span>콩고민주공화국<span class="ab">COD</span></td><td class="num">0</td><td class="num">0</td><td class="num">0</td><td class="num">0</td><td class="num">0</td><td class="pts">0</td><td><span class="tag out">탈락권</span></td></tr></table></div><div class="card"><h2>Group L</h2><table><tr><th class="rank">#</th><th class="team">팀</th><th>경기</th><th>승</th><th>무</th><th>패</th><th>득실</th><th>승점</th><th>32강</th></tr><tr class="q1"><td class="rank">1</td><td class="team" title="옐로 0 · 레드 0 · 행동점수 0"><span class="fl">🏴󠁧󠁢󠁥󠁮󠁧󠁿</span>잉글랜드<span class="ab">ENG</span></td><td class="num">0</td><td class="num">0</td><td class="num">0</td><td class="num">0</td><td class="num">0</td><td class="pts">0</td><td><span class="tag q1">진출</span></td></tr><tr class="q1"><td class="rank">2</td><td class="team" title="옐로 0 · 레드 0 · 행동점수 0"><span class="fl">🇭🇷</span>크로아티아<span class="ab">CRO</span></td><td class="num">0</td><td class="num">0</td><td class="num">0</td><td class="num">0</td><td class="num">0</td><td class="pts">0</td><td><span class="tag q1">진출</span></td></tr><tr class="q3"><td class="rank">3</td><td class="team" title="옐로 0 · 레드 0 · 행동점수 0"><span class="fl">🇬🇭</span>가나<span class="ab">GHA</span></td><td class="num">0</td><td class="num">0</td><td class="num">0</td><td class="num">0</td><td class="num">0</td><td class="pts">0</td><td><span class="tag q3">3위 진출</span></td></tr><tr class="out"><td class="rank">4</td><td class="team" title="옐로 0 · 레드 0 · 행동점수 0"><span class="fl">🇵🇦</span>파나마<span class="ab">PAN</span></td><td class="num">0</td><td class="num">0</td><td class="num">0</td><td class="num">0</td><td class="num">0</td><td class="pts">0</td><td><span class="tag out">탈락권</span></td></tr></table></div></div>
+<section class="thirds" id="thirds"><h2>3위 팀 진출 경쟁</h2><div class="sub">각 조 3위 12팀 중 <b>상위 8팀</b>이 와일드카드로 32강 진출</div><div class="tbl3"><table><tr><th>순위</th><th>조</th><th class="team">팀</th><th>경기</th><th>득실</th><th>승점</th><th>32강</th></tr><tr class="q3"><td class="num">1</td><td class="num">F조</td><td class="team" title="옐로 3 · 레드 0 · 행동점수 -3"><span class="fl">🇳🇱</span>네덜란드<span class="ab">NED</span></td><td class="num">1</td><td class="num">0</td><td class="pts">1</td><td><span class="tag q3">3위 진출</span></td></tr><tr class="q3"><td class="num">2</td><td class="num">B조</td><td class="team" title="옐로 2 · 레드 0 · 행동점수 -2"><span class="fl">🇶🇦</span>카타르<span class="ab">QAT</span></td><td class="num">1</td><td class="num">0</td><td class="pts">1</td><td><span class="tag q3">3위 진출</span></td></tr><tr class="q3"><td class="num">3</td><td class="num">C조</td><td class="team" title="옐로 2 · 레드 0 · 행동점수 -2"><span class="fl">🇧🇷</span>브라질<span class="ab">BRA</span></td><td class="num">1</td><td class="num">0</td><td class="pts">1</td><td><span class="tag q3">3위 진출</span></td></tr><tr class="q3"><td class="num">4</td><td class="num">G조</td><td class="team" title="옐로 2 · 레드 0 · 행동점수 -2"><span class="fl">🇧🇪</span>벨기에<span class="ab">BEL</span></td><td class="num">1</td><td class="num">0</td><td class="pts">1</td><td><span class="tag q3">3위 진출</span></td></tr><tr class="q3"><td class="num">5</td><td class="num">H조</td><td class="team" title="옐로 1 · 레드 0 · 행동점수 -1"><span class="fl">🇪🇸</span>스페인<span class="ab">ESP</span></td><td class="num">1</td><td class="num">0</td><td class="pts">1</td><td><span class="tag q3">3위 진출</span></td></tr><tr class="q3"><td class="num">6</td><td class="num">J조</td><td class="team" title="옐로 0 · 레드 0 · 행동점수 0"><span class="fl">🇩🇿</span>알제리<span class="ab">ALG</span></td><td class="num">0</td><td class="num">0</td><td class="pts">0</td><td><span class="tag q3">3위 진출</span></td></tr><tr class="q3"><td class="num">7</td><td class="num">K조</td><td class="team" title="옐로 0 · 레드 0 · 행동점수 0"><span class="fl">🇺🇿</span>우즈베키스탄<span class="ab">UZB</span></td><td class="num">0</td><td class="num">0</td><td class="pts">0</td><td><span class="tag q3">3위 진출</span></td></tr><tr class="q3 cut"><td class="num">8</td><td class="num">L조</td><td class="team" title="옐로 0 · 레드 0 · 행동점수 0"><span class="fl">🇬🇭</span>가나<span class="ab">GHA</span></td><td class="num">0</td><td class="num">0</td><td class="pts">0</td><td><span class="tag q3">3위 진출</span></td></tr><tr><td colspan="7" class="cutlabel">▲ 진출 컷 — 3위 8팀까지 32강 진출 / 아래는 탈락 위기</td></tr><tr class="out3"><td class="num">9</td><td class="num">A조</td><td class="team" title="옐로 0 · 레드 0 · 행동점수 0"><span class="fl">🇨🇿</span>체코<span class="ab">CZE</span></td><td class="num">1</td><td class="num">-1</td><td class="pts">0</td><td><span class="tag out3">탈락 위기</span></td></tr><tr class="out3"><td class="num">10</td><td class="num">E조</td><td class="team" title="옐로 1 · 레드 0 · 행동점수 -1"><span class="fl">🇪🇨</span>에콰도르<span class="ab">ECU</span></td><td class="num">1</td><td class="num">-1</td><td class="pts">0</td><td><span class="tag out3">탈락 위기</span></td></tr><tr class="out3"><td class="num">11</td><td class="num">I조</td><td class="team" title="옐로 0 · 레드 0 · 행동점수 0"><span class="fl">🇸🇳</span>세네갈<span class="ab">SEN</span></td><td class="num">1</td><td class="num">-2</td><td class="pts">0</td><td><span class="tag out3">탈락 위기</span></td></tr><tr class="out3"><td class="num">12</td><td class="num">D조</td><td class="team" title="옐로 1 · 레드 0 · 행동점수 -1"><span class="fl">🇹🇷</span>튀르키예<span class="ab">TUR</span></td><td class="num">1</td><td class="num">-2</td><td class="pts">0</td><td><span class="tag out3">탈락 위기</span></td></tr></table></div></section>
+<footer>
+  동률 처리(FIFA 2026): 승자승(승점·득실·다득점) → 전체 득실차 → 다득점 → 팀 행동점수(옐로 −1·레드 −4) → FIFA랭킹 · 추첨 폐지<br>
+  데이터: ESPN · <b>경기 중에만 45초 폴링</b>(그 외엔 다음 킥오프까지 대기) · 진행중 경기는 잠정 순위 · 행동점수는 완료 경기 기준<br>
+  베이스/행동점수는 <code>python3 update.py</code> 가 2시간마다 갱신 · 오프라인이면 마지막 스냅샷 표시
+</footer>
+<script>window.WC_DATA={"teams": {"MEX": {"g": "A", "ko": "멕시코", "fl": "🇲🇽"}, "RSA": {"g": "A", "ko": "남아공", "fl": "🇿🇦"}, "CZE": {"g": "A", "ko": "체코", "fl": "🇨🇿"}, "KOR": {"g": "A", "ko": "대한민국", "fl": "🇰🇷"}, "CAN": {"g": "B", "ko": "캐나다", "fl": "🇨🇦"}, "SUI": {"g": "B", "ko": "스위스", "fl": "🇨🇭"}, "QAT": {"g": "B", "ko": "카타르", "fl": "🇶🇦"}, "BIH": {"g": "B", "ko": "보스니아", "fl": "🇧🇦"}, "BRA": {"g": "C", "ko": "브라질", "fl": "🇧🇷"}, "MAR": {"g": "C", "ko": "모로코", "fl": "🇲🇦"}, "SCO": {"g": "C", "ko": "스코틀랜드", "fl": "🏴󠁧󠁢󠁳󠁣󠁴󠁿"}, "HAI": {"g": "C", "ko": "아이티", "fl": "🇭🇹"}, "USA": {"g": "D", "ko": "미국", "fl": "🇺🇸"}, "PAR": {"g": "D", "ko": "파라과이", "fl": "🇵🇾"}, "TUR": {"g": "D", "ko": "튀르키예", "fl": "🇹🇷"}, "AUS": {"g": "D", "ko": "호주", "fl": "🇦🇺"}, "GER": {"g": "E", "ko": "독일", "fl": "🇩🇪"}, "ECU": {"g": "E", "ko": "에콰도르", "fl": "🇪🇨"}, "CIV": {"g": "E", "ko": "코트디부아르", "fl": "🇨🇮"}, "CUW": {"g": "E", "ko": "퀴라소", "fl": "🇨🇼"}, "NED": {"g": "F", "ko": "네덜란드", "fl": "🇳🇱"}, "JPN": {"g": "F", "ko": "일본", "fl": "🇯🇵"}, "SWE": {"g": "F", "ko": "스웨덴", "fl": "🇸🇪"}, "TUN": {"g": "F", "ko": "튀니지", "fl": "🇹🇳"}, "BEL": {"g": "G", "ko": "벨기에", "fl": "🇧🇪"}, "IRN": {"g": "G", "ko": "이란", "fl": "🇮🇷"}, "EGY": {"g": "G", "ko": "이집트", "fl": "🇪🇬"}, "NZL": {"g": "G", "ko": "뉴질랜드", "fl": "🇳🇿"}, "ESP": {"g": "H", "ko": "스페인", "fl": "🇪🇸"}, "URU": {"g": "H", "ko": "우루과이", "fl": "🇺🇾"}, "KSA": {"g": "H", "ko": "사우디아라비아", "fl": "🇸🇦"}, "CPV": {"g": "H", "ko": "카보베르데", "fl": "🇨🇻"}, "FRA": {"g": "I", "ko": "프랑스", "fl": "🇫🇷"}, "SEN": {"g": "I", "ko": "세네갈", "fl": "🇸🇳"}, "NOR": {"g": "I", "ko": "노르웨이", "fl": "🇳🇴"}, "IRQ": {"g": "I", "ko": "이라크", "fl": "🇮🇶"}, "ARG": {"g": "J", "ko": "아르헨티나", "fl": "🇦🇷"}, "AUT": {"g": "J", "ko": "오스트리아", "fl": "🇦🇹"}, "ALG": {"g": "J", "ko": "알제리", "fl": "🇩🇿"}, "JOR": {"g": "J", "ko": "요르단", "fl": "🇯🇴"}, "POR": {"g": "K", "ko": "포르투갈", "fl": "🇵🇹"}, "COL": {"g": "K", "ko": "콜롬비아", "fl": "🇨🇴"}, "UZB": {"g": "K", "ko": "우즈베키스탄", "fl": "🇺🇿"}, "COD": {"g": "K", "ko": "콩고민주공화국", "fl": "🇨🇩"}, "ENG": {"g": "L", "ko": "잉글랜드", "fl": "🏴󠁧󠁢󠁥󠁮󠁧󠁿"}, "CRO": {"g": "L", "ko": "크로아티아", "fl": "🇭🇷"}, "GHA": {"g": "L", "ko": "가나", "fl": "🇬🇭"}, "PAN": {"g": "L", "ko": "파나마", "fl": "🇵🇦"}}, "disc": {"MEX": {"c": -5, "y": 1, "r": 1}, "KOR": {"c": -1, "y": 1, "r": 0}, "CZE": {"c": 0, "y": 0, "r": 0}, "RSA": {"c": -10, "y": 2, "r": 2}, "SUI": {"c": -1, "y": 1, "r": 0}, "CAN": {"c": -2, "y": 2, "r": 0}, "QAT": {"c": -2, "y": 2, "r": 0}, "BIH": {"c": -3, "y": 3, "r": 0}, "SCO": {"c": -3, "y": 3, "r": 0}, "MAR": {"c": 0, "y": 0, "r": 0}, "BRA": {"c": -2, "y": 2, "r": 0}, "HAI": {"c": -1, "y": 1, "r": 0}, "USA": {"c": -1, "y": 1, "r": 0}, "AUS": {"c": 0, "y": 0, "r": 0}, "TUR": {"c": -1, "y": 1, "r": 0}, "PAR": {"c": -5, "y": 5, "r": 0}, "GER": {"c": 0, "y": 0, "r": 0}, "CIV": {"c": -3, "y": 3, "r": 0}, "ECU": {"c": -1, "y": 1, "r": 0}, "CUW": {"c": 0, "y": 0, "r": 0}, "SWE": {"c": 0, "y": 0, "r": 0}, "JPN": {"c": 0, "y": 0, "r": 0}, "NED": {"c": -3, "y": 3, "r": 0}, "TUN": {"c": -1, "y": 1, "r": 0}, "NZL": {"c": 0, "y": 0, "r": 0}, "IRN": {"c": -1, "y": 1, "r": 0}, "BEL": {"c": -2, "y": 2, "r": 0}, "EGY": {"c": -2, "y": 2, "r": 0}, "URU": {"c": 0, "y": 0, "r": 0}, "KSA": {"c": -1, "y": 1, "r": 0}, "ESP": {"c": -1, "y": 1, "r": 0}, "CPV": {"c": -1, "y": 1, "r": 0}, "NOR": {"c": 0, "y": 0, "r": 0}, "FRA": {"c": 0, "y": 0, "r": 0}, "SEN": {"c": 0, "y": 0, "r": 0}, "IRQ": {"c": -1, "y": 1, "r": 0}, "ARG": {"c": 0, "y": 0, "r": 0}, "AUT": {"c": 0, "y": 0, "r": 0}, "ALG": {"c": 0, "y": 0, "r": 0}, "JOR": {"c": 0, "y": 0, "r": 0}, "POR": {"c": 0, "y": 0, "r": 0}, "COL": {"c": 0, "y": 0, "r": 0}, "UZB": {"c": 0, "y": 0, "r": 0}, "COD": {"c": 0, "y": 0, "r": 0}, "ENG": {"c": 0, "y": 0, "r": 0}, "CRO": {"c": 0, "y": 0, "r": 0}, "GHA": {"c": 0, "y": 0, "r": 0}, "PAN": {"c": 0, "y": 0, "r": 0}}, "seed": {"A": ["MEX", "RSA", "CZE", "KOR"], "B": ["CAN", "SUI", "QAT", "BIH"], "C": ["BRA", "MAR", "SCO", "HAI"], "D": ["USA", "PAR", "TUR", "AUS"], "E": ["GER", "ECU", "CIV", "CUW"], "F": ["NED", "JPN", "SWE", "TUN"], "G": ["BEL", "IRN", "EGY", "NZL"], "H": ["ESP", "URU", "KSA", "CPV"], "I": ["FRA", "SEN", "NOR", "IRQ"], "J": ["ARG", "AUT", "ALG", "JOR"], "K": ["POR", "COL", "UZB", "COD"], "L": ["ENG", "CRO", "GHA", "PAN"]}, "fifaRank": {}, "schedule": [{"t": 1781204400000, "state": "post"}, {"t": 1781229600000, "state": "post"}, {"t": 1781290800000, "state": "post"}, {"t": 1781312400000, "state": "post"}, {"t": 1781377200000, "state": "post"}, {"t": 1781388000000, "state": "post"}, {"t": 1781398800000, "state": "post"}, {"t": 1781409600000, "state": "post"}, {"t": 1781456400000, "state": "post"}, {"t": 1781467200000, "state": "post"}, {"t": 1781478000000, "state": "post"}, {"t": 1781488800000, "state": "post"}, {"t": 1781539200000, "state": "post"}, {"t": 1781550000000, "state": "post"}, {"t": 1781560800000, "state": "post"}, {"t": 1781571600000, "state": "post"}, {"t": 1781636400000, "state": "post"}, {"t": 1781647200000, "state": "post"}, {"t": 1781658000000, "state": "in"}, {"t": 1781668800000, "state": "pre"}, {"t": 1781715600000, "state": "pre"}, {"t": 1781726400000, "state": "pre"}, {"t": 1781737200000, "state": "pre"}, {"t": 1781748000000, "state": "pre"}, {"t": 1781798400000, "state": "pre"}, {"t": 1781809200000, "state": "pre"}, {"t": 1781820000000, "state": "pre"}, {"t": 1781830800000, "state": "pre"}, {"t": 1781895600000, "state": "pre"}, {"t": 1781906400000, "state": "pre"}, {"t": 1781915400000, "state": "pre"}, {"t": 1781924400000, "state": "pre"}, {"t": 1781974800000, "state": "pre"}, {"t": 1781985600000, "state": "pre"}, {"t": 1782000000000, "state": "pre"}, {"t": 1782014400000, "state": "pre"}, {"t": 1782057600000, "state": "pre"}, {"t": 1782068400000, "state": "pre"}, {"t": 1782079200000, "state": "pre"}, {"t": 1782090000000, "state": "pre"}, {"t": 1782147600000, "state": "pre"}, {"t": 1782162000000, "state": "pre"}, {"t": 1782172800000, "state": "pre"}, {"t": 1782183600000, "state": "pre"}, {"t": 1782234000000, "state": "pre"}, {"t": 1782244800000, "state": "pre"}, {"t": 1782255600000, "state": "pre"}, {"t": 1782266400000, "state": "pre"}, {"t": 1782327600000, "state": "pre"}, {"t": 1782327600000, "state": "pre"}, {"t": 1782338400000, "state": "pre"}, {"t": 1782338400000, "state": "pre"}, {"t": 1782349200000, "state": "pre"}, {"t": 1782349200000, "state": "pre"}, {"t": 1782417600000, "state": "pre"}, {"t": 1782417600000, "state": "pre"}, {"t": 1782428400000, "state": "pre"}, {"t": 1782428400000, "state": "pre"}, {"t": 1782439200000, "state": "pre"}, {"t": 1782439200000, "state": "pre"}, {"t": 1782500400000, "state": "pre"}, {"t": 1782500400000, "state": "pre"}, {"t": 1782518400000, "state": "pre"}, {"t": 1782518400000, "state": "pre"}, {"t": 1782529200000, "state": "pre"}, {"t": 1782529200000, "state": "pre"}, {"t": 1782594000000, "state": "pre"}, {"t": 1782594000000, "state": "pre"}, {"t": 1782603000000, "state": "pre"}, {"t": 1782603000000, "state": "pre"}, {"t": 1782612000000, "state": "pre"}, {"t": 1782612000000, "state": "pre"}], "cfg": {"scoreboard": "https://site.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard?dates=20260611-20260720&limit=300", "groupType": 13802, "poll": 45, "leadMin": 5, "matchWindowMin": 150, "idleMin": 10, "qualifyPer": 2, "thirdSlots": 8}};</script>
+<script>
+(function(){
+  var D=window.WC_DATA; if(!D||!window.fetch) return;
+  var TEAMS=D.teams, DISC=D.disc||{}, SEED=D.seed, CFG=D.cfg, FR=D.fifaRank||{};
+  var GL="ABCDEFGHIJKL".split("");
+  var STAT={Q1:["q1","진출"],Q3:["q3","3위 진출"],OUT3:["out3","탈락 위기"],OUT:["out","탈락권"]};
+  function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];});}
+  function rnk(t){return FR[t.abbr]||999;}
+  function blank(ab){var t=TEAMS[ab],d=DISC[ab]||{};return {abbr:ab,ko:t.ko,fl:t.fl,group:t.g,
+    gp:0,w:0,d:0,l:0,gf:0,ga:0,gd:0,pts:0,results:[],conduct:(d.c||0),y:(d.y||0),r:(d.r||0),live:false};}
+  function tableFrom(matches){
+    var tb={},ab; for(ab in TEAMS) tb[ab]=blank(ab);
+    var played=0;
+    for(var i=0;i<matches.length;i++){var m=matches[i];
+      if(m.state!=="post"&&m.state!=="in")continue;
+      if(!(m.a in tb)||!(m.b in tb))continue;
+      if(m.state==="post")played++;
+      var lv=m.state==="in", sides=[[m.a,m.b,m.ga,m.gb],[m.b,m.a,m.gb,m.ga]];
+      for(var s=0;s<2;s++){var me=sides[s][0],opp=sides[s][1],gf=sides[s][2],ga=sides[s][3],r=tb[me];
+        r.gp++;r.gf+=gf;r.ga+=ga;r.results.push([opp,gf,ga]);
+        if(gf>ga)r.w++;else if(gf===ga)r.d++;else r.l++;
+        if(lv)r.live=true;}
+    }
+    for(ab in tb){var x=tb[ab];x.gd=x.gf-x.ga;x.pts=x.w*3+x.d;}
+    return {tb:tb,played:played};
+  }
+  function h2h(tied){
+    var nm={},i; for(i=0;i<tied.length;i++)nm[tied[i].abbr]=1;
+    var mini={}; for(i=0;i<tied.length;i++)mini[tied[i].abbr]=[0,0,0];
+    for(i=0;i<tied.length;i++){var t=tied[i];for(var j=0;j<t.results.length;j++){var rr=t.results[j];
+      if(nm[rr[0]]){var a=mini[t.abbr];a[1]+=rr[1];a[2]+=rr[2];a[0]+=rr[1]>rr[2]?3:(rr[1]===rr[2]?1:0);}}}
+    var o={}; for(var k in mini){var v=mini[k];o[k]=[v[0],v[1]-v[2],v[1]];} return o;
+  }
+  function cmp(a,b){for(var i=0;i<a.length;i++)if(a[i]!==b[i])return a[i]-b[i];return 0;}
+  function byOverall(bk){var sd=SEED[bk[0].group];
+    return bk.slice().sort(function(x,y){return (y.gd-x.gd)||(y.gf-x.gf)||(y.conduct-x.conduct)
+      ||(rnk(x)-rnk(y))||(sd.indexOf(x.abbr)-sd.indexOf(y.abbr));});}
+  function orderTied(td){
+    if(td.length===1)return td.slice();
+    var h=h2h(td);
+    var od=td.slice().sort(function(x,y){return cmp(h[y.abbr],h[x.abbr]);});
+    var res=[],i=0;
+    while(i<od.length){var j=i;while(j<od.length&&cmp(h[od[j].abbr],h[od[i].abbr])===0)j++;
+      var g=od.slice(i,j);
+      if(g.length===td.length)res=res.concat(byOverall(g)); else res=res.concat(orderTied(g));
+      i=j;}
+    return res;
+  }
+  function buildGroups(tb){
+    var gs=[];
+    for(var gi=0;gi<GL.length;gi++){var g=GL[gi];
+      var rows=SEED[g].map(function(a){return tb[a];}).sort(function(x,y){return y.pts-x.pts;});
+      var rk=[],i=0;
+      while(i<rows.length){var j=i;while(j<rows.length&&rows[j].pts===rows[i].pts)j++;
+        rk=rk.concat(orderTied(rows.slice(i,j)));i=j;}
+      rk.forEach(function(r,k){r.rank=k+1;});
+      gs.push({letter:g,rows:rk});}
+    return gs;
+  }
+  function rankThirds(gs){
+    var th=gs.map(function(g){return g.rows[2];});
+    th.sort(function(x,y){return (y.pts-x.pts)||(y.gd-x.gd)||(y.gf-x.gf)||(y.conduct-x.conduct)
+      ||(rnk(x)-rnk(y))||(x.group<y.group?-1:(x.group>y.group?1:0));});
+    th.forEach(function(r,k){r.thirdRank=k+1;r.thirdQ=(k+1)<=CFG.thirdSlots;});
+    return th;
+  }
+  function status(gs){gs.forEach(function(g){g.rows.forEach(function(r){
+    if(r.rank<=CFG.qualifyPer)r.status="Q1";
+    else if(r.rank===3)r.status=r.thirdQ?"Q3":"OUT3"; else r.status="OUT";});});}
+
+  function gds(n){return n>0?"+"+n:""+n;}
+  function tip(r){return "옐로 "+r.y+" · 레드 "+r.r+" · 행동점수 "+r.conduct+(r.live?" · 🔴 진행중 잠정":"");}
+  function rowH(r){var m=STAT[r.status],cls=m[0],lab=m[1],prov=r.live?'<span class="prov">잠정</span>':"";
+    return '<tr class="'+cls+(r.live?' liverow':'')+'"><td class="rank">'+r.rank+'</td>'
+      +'<td class="team" title="'+esc(tip(r))+'"><span class="fl">'+r.fl+'</span>'+esc(r.ko)
+      +'<span class="ab">'+esc(r.abbr)+'</span>'+prov+'</td>'
+      +'<td class="num">'+r.gp+'</td><td class="num">'+r.w+'</td><td class="num">'+r.d+'</td>'
+      +'<td class="num">'+r.l+'</td><td class="num">'+gds(r.gd)+'</td><td class="pts">'+r.pts+'</td>'
+      +'<td><span class="tag '+cls+'">'+lab+'</span></td></tr>';}
+  function cardH(g){var live=g.rows.some(function(r){return r.live;})?'<span class="glive">🔴 진행중</span>':"";
+    var head='<tr><th class="rank">#</th><th class="team">팀</th><th>경기</th><th>승</th><th>무</th><th>패</th><th>득실</th><th>승점</th><th>32강</th></tr>';
+    return '<div class="card"><h2>Group '+g.letter+live+'</h2><table>'+head+g.rows.map(rowH).join("")+'</table></div>';}
+  function thirdsH(th){
+    var head='<tr><th>순위</th><th>조</th><th class="team">팀</th><th>경기</th><th>득실</th><th>승점</th><th>32강</th></tr>',body="";
+    th.forEach(function(r){var q=r.thirdQ,m=STAT[q?"Q3":"OUT3"],cls=m[0],lab=m[1];
+      var cut=r.thirdRank===CFG.thirdSlots?" cut":"",prov=r.live?'<span class="prov">잠정</span>':"";
+      body+='<tr class="'+cls+cut+(r.live?' liverow':'')+'"><td class="num">'+r.thirdRank+'</td>'
+        +'<td class="num">'+r.group+'조</td><td class="team" title="'+esc(tip(r))+'"><span class="fl">'+r.fl+'</span>'+esc(r.ko)
+        +'<span class="ab">'+esc(r.abbr)+'</span>'+prov+'</td><td class="num">'+r.gp+'</td>'
+        +'<td class="num">'+gds(r.gd)+'</td><td class="pts">'+r.pts+'</td>'
+        +'<td><span class="tag '+cls+'">'+lab+'</span></td></tr>';
+      if(r.thirdRank===CFG.thirdSlots)
+        body+='<tr><td colspan="7" class="cutlabel">▲ 진출 컷 — 3위 '+CFG.thirdSlots+'팀까지 32강 진출 / 아래는 탈락 위기</td></tr>';});
+    return '<h2>3위 팀 진출 경쟁</h2><div class="sub">각 조 3위 12팀 중 <b>상위 '+CFG.thirdSlots+'팀</b>이 와일드카드로 32강 진출</div>'
+      +'<div class="tbl3"><table>'+head+body+'</table></div>';}
+  function bannerH(live){if(!live.length)return "";
+    return '<div class="livebar">'+live.map(function(m){var ha=TEAMS[m.a],hb=TEAMS[m.b];
+      return '<span class="livematch"><span class="livedot"></span>'+(ha?ha.fl:"")+' '+m.a
+        +' <b>'+m.ga+' - '+m.gb+'</b> '+m.b+(hb?' '+hb.fl:"")+' <span class="min">'+esc(m.detail||"LIVE")+'</span></span>';
+    }).join("")+'</div>';}
+
+  function render(matches,live){
+    var c=tableFrom(matches),gs=buildGroups(c.tb),th=rankThirds(gs);status(gs);
+    var grid=document.getElementById("grid");if(grid)grid.innerHTML=gs.map(cardH).join("");
+    var t3=document.getElementById("thirds");if(t3)t3.innerHTML=thirdsH(th);
+    var lw=document.getElementById("livewrap");if(lw)lw.innerHTML=bannerH(live);
+    var pl=document.getElementById("played");if(pl)pl.textContent=c.played;
+  }
+  function setStatus(txt,on){var s=document.getElementById("livestatus");if(s){s.textContent=txt;s.className="livestatus"+(on?" on":"");}}
+  function parse(data){var matches=[],live=[],sched=[];(data.events||[]).forEach(function(ev){
+    if((ev.season||{}).type!==CFG.groupType)return;var c=(ev.competitions||[])[0];if(!c)return;
+    var st=(c.status||{}).type||{},cs=c.competitors||[];if(cs.length!==2)return;
+    sched.push({t:Date.parse(ev.date||c.date||c.startDate),state:st.state});
+    var home=cs.filter(function(x){return x.homeAway==="home";})[0]||cs[0];
+    var away=cs.filter(function(x){return x.homeAway==="away";})[0]||cs[1];
+    var m={a:home.team.abbreviation,b:away.team.abbreviation,ga:parseInt(home.score,10)||0,gb:parseInt(away.score,10)||0,state:st.state};
+    matches.push(m); if(st.state==="in")live.push({a:m.a,b:m.b,ga:m.ga,gb:m.gb,detail:st.shortDetail||st.detail||""});});
+    return {matches:matches,live:live,sched:sched};}
+
+  var SCHED=(D.schedule||[]).slice(), T=null;
+  function poll(){
+    return fetch(CFG.scoreboard,{cache:"no-store"}).then(function(r){return r.json();}).then(function(data){
+      var p=parse(data); if(p.sched.length) SCHED=p.sched; render(p.matches,p.live);
+      var now=new Date().toLocaleTimeString("ko-KR");
+      setStatus((p.live.length?("🔴 LIVE "+p.live.length+"경기 진행중 · "):"")+"갱신 "+now+" · "+CFG.poll+"초마다",p.live.length>0);
+    }).catch(function(){setStatus("오프라인 — 마지막 스냅샷 표시 중 (연결되면 자동 라이브)",false);});
+  }
+  // 일정 기반 폴링 결정: 진행중이거나 킥오프 임박(±윈도우) → 폴링, 그 외엔 다음 킥오프까지 대기
+  function windowState(){
+    var now=Date.now(), lead=(CFG.leadMin||5)*60000, win=(CFG.matchWindowMin||150)*60000;
+    var liveN=0, active=false, nextK=null;
+    for(var i=0;i<SCHED.length;i++){var m=SCHED[i]; if(!m.t) continue;
+      if(m.state==="in" && now<=m.t+win+3600000){liveN++; active=true;}
+      if(m.state!=="post" && now>=m.t-lead && now<=m.t+win) active=true;
+      if(m.state!=="post" && m.t>now && (nextK===null||m.t<nextK)) nextK=m.t;}
+    return {active:active, liveN:liveN, nextK:nextK};
+  }
+  function fmtT(ms){return new Date(ms).toLocaleString("ko-KR",{month:"numeric",day:"numeric",hour:"2-digit",minute:"2-digit"});}
+  function arm(ms){if(T)clearTimeout(T);T=setTimeout(tick,ms);}
+  function tick(){
+    var w=windowState();
+    if(w.active){ poll().then(function(){arm((CFG.poll||45)*1000);}); }
+    else{
+      setStatus(w.nextK?("⏸ 다음 경기 "+fmtT(w.nextK)+" 예정 · 그때까지 폴링 안 함"):"⏸ 예정된 경기 없음 · 폴링 중지",false);
+      var idleMax=(CFG.idleMin||10)*60000;
+      var until=w.nextK?(w.nextK-(CFG.leadMin||5)*60000-Date.now()):idleMax;
+      arm(Math.min(Math.max(until,5000),idleMax));
+    }
+  }
+  // 검증용 훅(파이썬과 동률 결과 대조)
+  window.WCLIVE={tableFrom:tableFrom,buildGroups:buildGroups,rankThirds:rankThirds,status:status,parse:parse,windowState:windowState,
+    orderForGroup:function(matches,letter){var t=tableFrom(matches).tb,gs=buildGroups(t);
+      var g=gs.filter(function(x){return x.letter===letter;})[0];return g.rows.map(function(r){return r.abbr;});}};
+  poll().then(tick);   // 열 때 1회 최신화 → 이후 '경기 시간에만' 폴링
+})();
+</script>
+</div></body></html>

@@ -74,7 +74,7 @@ tr.liverow .ab{color:#ff7a7a}
 .strip{display:flex;gap:10px;overflow-x:auto;padding:0 2px 10px;margin:0 0 20px;scroll-snap-type:x proximity;-webkit-overflow-scrolling:touch}
 .strip::-webkit-scrollbar{height:6px}
 .strip::-webkit-scrollbar-thumb{background:var(--line);border-radius:3px}
-.mcard{flex:0 0 auto;width:162px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 12px;scroll-snap-align:start}
+.mcard{flex:0 0 auto;width:176px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 12px;scroll-snap-align:start}
 .mcard.live{border-color:#5a2733}
 .mhead{font-size:11px;color:var(--muted);margin-bottom:8px;display:flex;align-items:center;gap:5px;white-space:nowrap}
 .mcard.live .mhead{color:#ff8a8a}
@@ -83,6 +83,7 @@ tr.liverow .ab{color:#ff7a7a}
 .mkick{color:var(--head)}
 .mrow{display:flex;align-items:center;font-size:13px;padding:3px 0;white-space:nowrap}
 .mrow .fl{margin-right:7px;font-size:15px}
+.mrow .mnm{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis}
 .mrow .msc{margin-left:auto;font-weight:700;font-variant-numeric:tabular-nums;color:var(--txt)}
 .mtime{font-size:11px;color:var(--muted);margin-top:7px;text-align:right}
 </style></head>
@@ -91,7 +92,7 @@ tr.liverow .ab{color:#ff7a7a}
   <h1>🏆 2026 FIFA 월드컵 — 조별 순위</h1>
   <div class="sub">
     <b id="played">19</b>/72경기 진행 · 32강 진출: 조 1·2위 직행(24) + 3위 상위 8팀 = <b>32팀</b><br>
-    색상은 <b>현재 순위 기준</b> 진출 여부 · 베이스 갱신 <b>2026-06-17 12:28 KST</b> · 진행중 경기는 <b>잠정(🔴)</b>으로 반영<br>
+    색상은 <b>현재 순위 기준</b> 진출 여부 · 베이스 갱신 <b>2026-06-17 12:31 KST</b> · 진행중 경기는 <b>잠정(🔴)</b>으로 반영<br>
     <span id="livestatus" class="livestatus">라이브 연결 중…</span>
   </div>
   <div class="legend"><span><i class="dot q1"></i>조 1·2위 — 진출 확정</span><span><i class="dot q3"></i>조 3위 — 와일드카드 진출 (상위 8팀)</span><span><i class="dot out3"></i>조 3위 — 탈락 위기</span><span><i class="dot out"></i>조 4위 — 탈락권</span></div>
@@ -208,8 +209,8 @@ tr.liverow .ab{color:#ff7a7a}
     var d0=new Date(n.getFullYear(),n.getMonth(),n.getDate()),t0=new Date(d.getFullYear(),d.getMonth(),d.getDate());
     var dd=Math.round((t0-d0)/86400000),lab=dd===0?"오늘":(dd===1?"내일":(d.getMonth()+1)+"/"+d.getDate());
     return lab+" "+d.toLocaleTimeString("ko-KR",{hour:"2-digit",minute:"2-digit"});}
-  function teamRow(ab,sc){var t=TEAMS[ab]||{fl:""};
-    return '<div class="mrow"><span class="fl">'+(t.fl||"")+'</span>'+esc(ab)+(sc!==null?'<span class="msc">'+sc+'</span>':'')+'</div>';}
+  function teamRow(ab,sc){var t=TEAMS[ab]||{fl:"",ko:ab};
+    return '<div class="mrow"><span class="fl">'+(t.fl||"")+'</span><span class="mnm">'+esc(t.ko||ab)+'</span>'+(sc!==null?'<span class="msc">'+sc+'</span>':'')+'</div>';}
   function liveCard(m){return '<div class="mcard live"><div class="mhead"><span class="livedot"></span>'+esc(grp(m.a))+'조<span class="mmin">'+esc(m.detail||"LIVE")+'</span></div>'+teamRow(m.a,m.ga)+teamRow(m.b,m.gb)+'</div>';}
   function upCard(m){return '<div class="mcard up"><div class="mhead">'+esc(grp(m.a))+'조<span class="mkick">'+esc(relTime(m.t))+'</span></div>'+teamRow(m.a,null)+teamRow(m.b,null)+'<div class="mtime">'+esc(absTime(m.t))+'</div></div>';}
   function stripH(matches){var now=Date.now(),DAY=86400000;
@@ -262,7 +263,7 @@ tr.liverow .ab{color:#ff7a7a}
     var w=windowState();
     if(w.active){ poll().then(function(){arm((CFG.poll||45)*1000);}); }
     else{
-      setStatus(w.nextK?("⏸ 다음 경기 "+fmtT(w.nextK)+" 예정 · 그때까지 폴링 안 함"):"⏸ 예정된 경기 없음 · 폴링 중지",false);
+      setStatus(w.nextK?("⏸ 다음 경기 "+fmtT(w.nextK)+" 예정"):"⏸ 예정된 경기 없음",false);
       var idleMax=(CFG.idleMin||10)*60000;
       var until=w.nextK?(w.nextK-(CFG.leadMin||5)*60000-Date.now()):idleMax;
       arm(Math.min(Math.max(until,5000),idleMax));

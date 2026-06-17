@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="ko"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>2026 월드컵 조별 순위</title><!-- base generated: 2026-06-18 07:13 KST (화면 비표시·빌드 추적용) -->
+<title>2026 월드컵 조별 순위</title><!-- base generated: 2026-06-18 07:30 KST (화면 비표시·빌드 추적용) -->
 <style>
 :root{
   --bg:#0f1420; --card:#1a2130; --card2:#151b27; --line:#2a3346;
@@ -216,7 +216,7 @@ tr.liverow .ab{color:#ff7a7a}
       +'<div class="tbl3"><table>'+head+body+'</table></div>';}
   // 경기 스트립: 라이브 카드(왼쪽) + 24시간 내 예정 경기 카드(오른쪽, 좌우 스크롤). 끝난 경기는 제외.
   function grp(ab){return (TEAMS[ab]||{}).g||"";}
-  function relTime(t){var diff=t-Date.now();if(diff<60000)return "곧";var mins=Math.round(diff/60000);
+  function relTime(t){var diff=t-Date.now();if(diff<60000)return "곧";var mins=Math.floor(diff/60000);
     if(mins<60)return mins+"분 후";var h=Math.floor(mins/60),mm=mins%60;return mm?(h+"시간 "+mm+"분 후"):(h+"시간 후");}
   function absTime(t){var d=new Date(t),n=new Date();
     var d0=new Date(n.getFullYear(),n.getMonth(),n.getDate()),t0=new Date(d.getFullYear(),d.getMonth(),d.getDate());
@@ -237,7 +237,7 @@ tr.liverow .ab{color:#ff7a7a}
     var ag=gs.filter(function(g){return g.side==="away";}).map(scorerH).join("");
     return '<div class="mlive">'+top+'<div class="ml-goals"><div class="ml-gcol ml-home">'+hg
       +'</div><div class="ml-ball">⚽</div><div class="ml-gcol ml-away">'+ag+'</div></div></div>';}
-  function upCard(m){return '<div class="mcard up"><div class="mhead">'+esc(grp(m.a))+'조<span class="mkick">'+esc(relTime(m.t))+'</span></div>'+teamRow(m.a,null)+teamRow(m.b,null)+'<div class="mtime">'+esc(absTime(m.t))+'</div></div>';}
+  function upCard(m){return '<div class="mcard up"><div class="mhead">'+esc(grp(m.a))+'조<span class="mkick" data-t="'+m.t+'">'+esc(relTime(m.t))+'</span></div>'+teamRow(m.a,null)+teamRow(m.b,null)+'<div class="mtime">'+esc(absTime(m.t))+'</div></div>';}
   function stripH(matches){var now=Date.now(),DAY=86400000;
     var live=matches.filter(function(m){return m.state==="in";});
     var up=matches.filter(function(m){return m.state==="pre"&&m.t&&m.t<=now+DAY&&m.t>=now-600000;}).sort(function(a,b){return a.t-b.t;});
@@ -308,6 +308,9 @@ tr.liverow .ab{color:#ff7a7a}
     function p(n){return (n<10?"0":"")+n;}
     return (d>0?d+"일 ":"")+p(h)+":"+p(m)+":"+p(s);}
   function countdownTick(){
+    // 예정 카드의 상대시간("N분 후")도 매초 갱신 — 텍스트만, 재렌더/깜빡임 없음 (라이브 여부 무관)
+    var ks=document.querySelectorAll(".mkick[data-t]");
+    for(var ki=0;ki<ks.length;ki++){var kt=+ks[ki].getAttribute("data-t");if(kt)ks[ki].textContent=relTime(kt);}
     var w=windowState();
     if(w.liveN>0) return;                       // 라이브 중엔 poll 이 'LIVE' 표시
     var s=document.getElementById("livestatus"); if(!s) return;

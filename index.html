@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="ko"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>2026 월드컵 조별 순위</title><!-- base generated: 2026-06-18 07:30 KST (화면 비표시·빌드 추적용) -->
+<title>2026 월드컵 조별 순위</title><!-- base generated: 2026-06-18 07:34 KST (화면 비표시·빌드 추적용) -->
 <style>
 :root{
   --bg:#0f1420; --card:#1a2130; --card2:#151b27; --line:#2a3346;
@@ -216,7 +216,7 @@ tr.liverow .ab{color:#ff7a7a}
       +'<div class="tbl3"><table>'+head+body+'</table></div>';}
   // 경기 스트립: 라이브 카드(왼쪽) + 24시간 내 예정 경기 카드(오른쪽, 좌우 스크롤). 끝난 경기는 제외.
   function grp(ab){return (TEAMS[ab]||{}).g||"";}
-  function relTime(t){var diff=t-Date.now();if(diff<60000)return "곧";var mins=Math.floor(diff/60000);
+  function relTime(t){var diff=t-Date.now();if(diff<60000)return "곧 시작";var mins=Math.floor(diff/60000);
     if(mins<60)return mins+"분 후";var h=Math.floor(mins/60),mm=mins%60;return mm?(h+"시간 "+mm+"분 후"):(h+"시간 후");}
   function absTime(t){var d=new Date(t),n=new Date();
     var d0=new Date(n.getFullYear(),n.getMonth(),n.getDate()),t0=new Date(d.getFullYear(),d.getMonth(),d.getDate());

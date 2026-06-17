@@ -71,7 +71,7 @@ tr.liverow .ab{color:#ff7a7a}
 .prov{color:#ff7a7a;font-size:10px;margin-left:6px;font-weight:600}
 .card h2 .glive{float:right;font-size:11px;color:#ff6b6b;font-weight:600;letter-spacing:0}
 .striplabel{font-size:11.5px;color:var(--muted);margin:2px 0 8px}
-.strip{display:flex;gap:10px;overflow-x:auto;padding:0 2px 10px;margin:0 0 20px;scroll-snap-type:x proximity;-webkit-overflow-scrolling:touch}
+.strip{display:flex;align-items:center;gap:10px;overflow-x:auto;padding:0 2px 10px;margin:0 0 20px;scroll-snap-type:x proximity;-webkit-overflow-scrolling:touch}
 .strip::-webkit-scrollbar{height:6px}
 .strip::-webkit-scrollbar-thumb{background:var(--line);border-radius:3px}
 .mcard{flex:0 0 auto;width:176px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 12px;scroll-snap-align:start}
@@ -86,13 +86,18 @@ tr.liverow .ab{color:#ff7a7a}
 .mrow .mnm{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis}
 .mrow .msc{margin-left:auto;font-weight:700;font-variant-numeric:tabular-nums;color:var(--txt)}
 .mtime{font-size:11px;color:var(--muted);margin-top:7px;text-align:right}
+.mlive{flex:0 0 auto;display:inline-flex;align-items:center;gap:9px;background:var(--card);border:1px solid #5a2733;border-radius:11px;padding:9px 13px;font-size:13.5px;white-space:nowrap;scroll-snap-align:start}
+.mlive .ml-g{color:#ff8a8a;font-size:11px}
+.mlive .ml-t{font-weight:500}
+.mlive .ml-sc{font-weight:700;font-variant-numeric:tabular-nums;color:var(--txt)}
+.mlive .ml-min{color:#ff5d5d;font-weight:700;font-variant-numeric:tabular-nums}
 </style></head>
 <body><div class="wrap">
 <header class="top">
   <h1>🏆 2026 FIFA 월드컵 — 조별 순위</h1>
   <div class="sub">
     <b id="played">19</b>/72경기 진행 · 32강 진출: 조 1·2위 직행(24) + 3위 상위 8팀 = <b>32팀</b><br>
-    색상은 <b>현재 순위 기준</b> 진출 여부 · 베이스 갱신 <b>2026-06-17 12:31 KST</b> · 진행중 경기는 <b>잠정(🔴)</b>으로 반영<br>
+    색상은 <b>현재 순위 기준</b> 진출 여부 · 베이스 갱신 <b>2026-06-17 12:38 KST</b> · 진행중 경기는 <b>잠정(🔴)</b>으로 반영<br>
     <span id="livestatus" class="livestatus">라이브 연결 중…</span>
   </div>
   <div class="legend"><span><i class="dot q1"></i>조 1·2위 — 진출 확정</span><span><i class="dot q3"></i>조 3위 — 와일드카드 진출 (상위 8팀)</span><span><i class="dot out3"></i>조 3위 — 탈락 위기</span><span><i class="dot out"></i>조 4위 — 탈락권</span></div>
@@ -211,7 +216,12 @@ tr.liverow .ab{color:#ff7a7a}
     return lab+" "+d.toLocaleTimeString("ko-KR",{hour:"2-digit",minute:"2-digit"});}
   function teamRow(ab,sc){var t=TEAMS[ab]||{fl:"",ko:ab};
     return '<div class="mrow"><span class="fl">'+(t.fl||"")+'</span><span class="mnm">'+esc(t.ko||ab)+'</span>'+(sc!==null?'<span class="msc">'+sc+'</span>':'')+'</div>';}
-  function liveCard(m){return '<div class="mcard live"><div class="mhead"><span class="livedot"></span>'+esc(grp(m.a))+'조<span class="mmin">'+esc(m.detail||"LIVE")+'</span></div>'+teamRow(m.a,m.ga)+teamRow(m.b,m.gb)+'</div>';}
+  function liveCard(m){var ta=TEAMS[m.a]||{},tb=TEAMS[m.b]||{};
+    return '<div class="mlive"><span class="livedot"></span><span class="ml-g">'+esc(grp(m.a))+'조</span>'
+      +'<span class="ml-t">'+(ta.fl||"")+' '+esc(ta.ko||m.a)+'</span>'
+      +'<span class="ml-sc">'+m.ga+' - '+m.gb+'</span>'
+      +'<span class="ml-t">'+(tb.fl||"")+' '+esc(tb.ko||m.b)+'</span>'
+      +'<span class="ml-min">'+esc(m.detail||"LIVE")+'</span></div>';}
   function upCard(m){return '<div class="mcard up"><div class="mhead">'+esc(grp(m.a))+'조<span class="mkick">'+esc(relTime(m.t))+'</span></div>'+teamRow(m.a,null)+teamRow(m.b,null)+'<div class="mtime">'+esc(absTime(m.t))+'</div></div>';}
   function stripH(matches){var now=Date.now(),DAY=86400000;
     var live=matches.filter(function(m){return m.state==="in";});

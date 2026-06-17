@@ -97,7 +97,7 @@ tr.liverow .ab{color:#ff7a7a}
   <h1>🏆 2026 FIFA 월드컵 — 조별 순위</h1>
   <div class="sub">
     <b id="played">19</b>/72경기 진행 · 32강 진출: 조 1·2위 직행(24) + 3위 상위 8팀 = <b>32팀</b><br>
-    색상은 <b>현재 순위 기준</b> 진출 여부 · 베이스 갱신 <b>2026-06-17 12:38 KST</b> · 진행중 경기는 <b>잠정(🔴)</b>으로 반영<br>
+    색상은 <b>현재 순위 기준</b> 진출 여부 · 베이스 갱신 <b>2026-06-17 12:43 KST</b> · 진행중 경기는 <b>잠정(🔴)</b>으로 반영<br>
     <span id="livestatus" class="livestatus">라이브 연결 중…</span>
   </div>
   <div class="legend"><span><i class="dot q1"></i>조 1·2위 — 진출 확정</span><span><i class="dot q3"></i>조 3위 — 와일드카드 진출 (상위 8팀)</span><span><i class="dot out3"></i>조 3위 — 탈락 위기</span><span><i class="dot out"></i>조 4위 — 탈락권</span></div>
@@ -254,7 +254,7 @@ tr.liverow .ab{color:#ff7a7a}
     return fetch(CFG.scoreboard,{cache:"no-store"}).then(function(r){return r.json();}).then(function(data){
       var p=parse(data); if(p.sched.length) SCHED=p.sched; render(p.matches,p.live);
       var now=new Date().toLocaleTimeString("ko-KR");
-      setStatus((p.live.length?("🔴 LIVE "+p.live.length+"경기 진행중 · "):"")+"갱신 "+now+" · "+CFG.poll+"초마다",p.live.length>0);
+      if(p.live.length) setStatus("🔴 LIVE "+p.live.length+"경기 진행중 · 갱신 "+now+" · "+CFG.poll+"초마다",true);
     }).catch(function(){setStatus("오프라인 — 마지막 스냅샷 표시 중 (연결되면 자동 라이브)",false);});
   }
   // 일정 기반 폴링 결정: 진행중이거나 킥오프 임박(±윈도우) → 폴링, 그 외엔 다음 킥오프까지 대기
@@ -273,7 +273,6 @@ tr.liverow .ab{color:#ff7a7a}
     var w=windowState();
     if(w.active){ poll().then(function(){arm((CFG.poll||45)*1000);}); }
     else{
-      setStatus(w.nextK?("⏸ 다음 경기 "+fmtT(w.nextK)+" 예정"):"⏸ 예정된 경기 없음",false);
       var idleMax=(CFG.idleMin||10)*60000;
       var until=w.nextK?(w.nextK-(CFG.leadMin||5)*60000-Date.now()):idleMax;
       arm(Math.min(Math.max(until,5000),idleMax));
@@ -283,7 +282,20 @@ tr.liverow .ab{color:#ff7a7a}
   window.WCLIVE={tableFrom:tableFrom,buildGroups:buildGroups,rankThirds:rankThirds,status:status,parse:parse,windowState:windowState,stripH:stripH,
     orderForGroup:function(matches,letter){var t=tableFrom(matches).tb,gs=buildGroups(t);
       var g=gs.filter(function(x){return x.letter===letter;})[0];return g.rows.map(function(r){return r.abbr;});}};
+  // 다음 경기까지 초단위 카운트다운(매초). 순수 시계 계산이라 폴링 안 해도 동작.
+  function fmtCountdown(ms){if(ms<0)ms=0;var s=Math.floor(ms/1000),d=Math.floor(s/86400);s-=d*86400;
+    var h=Math.floor(s/3600);s-=h*3600;var m=Math.floor(s/60);s-=m*60;
+    function p(n){return (n<10?"0":"")+n;}
+    return (d>0?d+"일 ":"")+p(h)+":"+p(m)+":"+p(s);}
+  function countdownTick(){
+    var w=windowState();
+    if(w.liveN>0) return;                       // 라이브 중엔 poll 이 'LIVE' 표시
+    if(w.nextK){var left=w.nextK-Date.now();
+      setStatus(left>0?("⏸ 다음 경기 "+absTime(w.nextK)+" 예정 · "+fmtCountdown(left)+" 후 시작"):"⏸ 곧 시작…",false);
+    } else setStatus("⏸ 예정된 경기 없음",false);
+  }
   poll().then(tick);   // 열 때 1회 최신화 → 이후 '경기 시간에만' 폴링
+  setInterval(countdownTick,1000); countdownTick();
 })();
 </script>
 </div></body></html>

@@ -60,6 +60,7 @@ tr.cut td{border-bottom:2px dashed var(--q3)}
 footer{margin-top:34px;color:var(--muted);font-size:11.5px;line-height:1.7}
 .livestatus{color:var(--muted);font-size:12.5px}
 .livestatus.on{color:#ff6b6b;font-weight:600}
+.livestatus .cd{font-size:17px;font-weight:700;font-variant-numeric:tabular-nums;color:var(--txt);letter-spacing:.3px;margin:0 1px}
 .livebar{display:flex;flex-wrap:wrap;gap:10px;margin:2px 0 22px}
 .livematch{display:inline-flex;align-items:center;gap:8px;background:var(--card);
   border:1px solid #4a2230;border-radius:10px;padding:7px 12px;font-size:13px}
@@ -97,7 +98,7 @@ tr.liverow .ab{color:#ff7a7a}
   <h1>🏆 2026 FIFA 월드컵 — 조별 순위</h1>
   <div class="sub">
     <b id="played">19</b>/72경기 진행 · 32강 진출: 조 1·2위 직행(24) + 3위 상위 8팀 = <b>32팀</b><br>
-    색상은 <b>현재 순위 기준</b> 진출 여부 · 베이스 갱신 <b>2026-06-17 12:43 KST</b> · 진행중 경기는 <b>잠정(🔴)</b>으로 반영<br>
+    색상은 <b>현재 순위 기준</b> 진출 여부 · 베이스 갱신 <b>2026-06-17 12:52 KST</b> · 진행중 경기는 <b>잠정(🔴)</b>으로 반영<br>
     <span id="livestatus" class="livestatus">라이브 연결 중…</span>
   </div>
   <div class="legend"><span><i class="dot q1"></i>조 1·2위 — 진출 확정</span><span><i class="dot q3"></i>조 3위 — 와일드카드 진출 (상위 8팀)</span><span><i class="dot out3"></i>조 3위 — 탈락 위기</span><span><i class="dot out"></i>조 4위 — 탈락권</span></div>
@@ -290,9 +291,13 @@ tr.liverow .ab{color:#ff7a7a}
   function countdownTick(){
     var w=windowState();
     if(w.liveN>0) return;                       // 라이브 중엔 poll 이 'LIVE' 표시
+    var s=document.getElementById("livestatus"); if(!s) return;
+    s.className="livestatus";
     if(w.nextK){var left=w.nextK-Date.now();
-      setStatus(left>0?("⏸ 다음 경기 "+absTime(w.nextK)+" 예정 · "+fmtCountdown(left)+" 후 시작"):"⏸ 곧 시작…",false);
-    } else setStatus("⏸ 예정된 경기 없음",false);
+      s.innerHTML = left>0
+        ? ("⏸ 다음 경기 "+absTime(w.nextK)+" 예정 · <span class=\"cd\">"+fmtCountdown(left)+"</span> 후 시작")
+        : "⏸ 곧 시작…";
+    } else s.innerHTML="⏸ 예정된 경기 없음";
   }
   poll().then(tick);   // 열 때 1회 최신화 → 이후 '경기 시간에만' 폴링
   setInterval(countdownTick,1000); countdownTick();

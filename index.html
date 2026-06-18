@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="ko"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>2026 월드컵 조별 순위</title><!-- base generated: 2026-06-18 13:54 KST (화면 비표시·빌드 추적용) -->
+<title>2026 월드컵 조별 순위</title><!-- base generated: 2026-06-18 14:00 KST (화면 비표시·빌드 추적용) -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
@@ -278,7 +278,7 @@ tr.liverow .ab{color:#ff7a7a}
   function scorerH(g){return '<span><span class="ml-gmin">'+esc(g.min)+'</span>'+esc(g.name)+(g.og?" (OG)":"")+(g.pk?" (PK)":"")+'</span>';}
   function liveCard(m){var ta=TEAMS[m.a]||{},tb=TEAMS[m.b]||{};
     var top='<div class="ml-top"><span class="livedot"></span><span class="ml-g">'+esc(grp(m.a))+'조</span>'
-      +'<span class="ml-t">'+(ta.fl||"")+' '+esc(ta.ko||m.a)+'</span>'
+      +'<span class="ml-t">'+esc(ta.ko||m.a)+' '+(ta.fl||"")+'</span>'
       +'<span class="ml-sc">'+m.ga+' - '+m.gb+'</span>'
       +'<span class="ml-t">'+(tb.fl||"")+' '+esc(tb.ko||m.b)+'</span>'
       +'<span class="ml-min">'+esc(m.detail||"LIVE")+'</span></div>';
@@ -359,7 +359,7 @@ tr.liverow .ab{color:#ff7a7a}
   // 토너먼트 진행 중 경기 카드(대진표 위, 조별리그 라이브 스트립과 동일 스타일)
   function koLiveCard(m){var ta=m.a,tb=m.b;
     var top='<div class="ml-top"><span class="livedot"></span><span class="ml-g">'+esc(m.round||"")+'</span>'
-      +'<span class="ml-t">'+(ta.fl||"")+' '+esc(ta.txt)+'</span>'
+      +'<span class="ml-t">'+esc(ta.txt)+' '+(ta.fl||"")+'</span>'
       +'<span class="ml-sc">'+m.ga+' - '+m.gb+'</span>'
       +'<span class="ml-t">'+(tb.fl||"")+' '+esc(tb.txt)+'</span>'
       +'<span class="ml-min">'+esc(m.detail||"LIVE")+'</span></div>';

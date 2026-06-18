@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="ko"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>2026 월드컵 조별 순위</title><!-- base generated: 2026-06-18 08:50 KST (화면 비표시·빌드 추적용) -->
+<title>2026 월드컵 조별 순위</title><!-- base generated: 2026-06-18 09:05 KST (화면 비표시·빌드 추적용) -->
 <style>
 :root{
   --bg:#0f1420; --card:#1a2130; --card2:#151b27; --line:#2a3346;
@@ -112,6 +112,7 @@ tr.liverow .ab{color:#ff7a7a}
 .kround h3{font-size:15px;margin:0 0 10px;color:var(--head);display:flex;align-items:baseline;gap:8px}
 .kround h3 .kn{font-size:11px;color:var(--muted);font-weight:400}
 .kmatch{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:11px 14px;margin-bottom:8px}
+.kmatch.klive{border-color:#5a2733}
 .krow{display:flex;align-items:center;gap:10px;font-size:13.5px}
 .kmatch .ka{flex:1;text-align:right;font-weight:500;min-width:0}
 .kmatch .kb{flex:1;text-align:left;font-weight:500;min-width:0}
@@ -301,11 +302,14 @@ tr.liverow .ab{color:#ff7a7a}
     for(r=0;r<tree.length;r++){var x=padL+r*COLW,final=(r===tree.length-1);
       s.push('<text x="'+(x+BW/2)+'" y="18" font-size="13" fill="#aeb8cc" text-anchor="middle" font-weight="600">'+tree[r].label+'</text>');
       for(j=0;j<centers[r].length;j++){var c=centers[r][j],y=Math.round(c-H/2),m=tree[r].matches[j];
-        s.push('<rect x="'+x+'" y="'+y+'" width="'+BW+'" height="'+H+'" rx="8" fill="'+(final?"#221f17":"#1a2130")+'" stroke="'+(final?"#caa24a":"#2a3346")+'"/>');
+        var liveM=(m.state==="in");                                   // 진행 중이면 빨간 테두리(점멸)
+        var bstroke=final?"#caa24a":(liveM?"#ff5d5d":"#2a3346");
+        s.push('<rect x="'+x+'" y="'+y+'" width="'+BW+'" height="'+H+'" rx="8" fill="'+(final?"#221f17":"#1a2130")+'" stroke="'+bstroke+'" stroke-width="'+(liveM?"1.7":"1")+'">'
+          +(liveM?'<animate attributeName="stroke-opacity" values="1;0.4;1" dur="1.4s" repeatCount="indefinite"/>':'')+'</rect>');
         var played=(m.state==="post"||m.state==="in"),resolved=(m.a.ab&&m.b.ab);
         var show=(r===0)||resolved||played;
         if(!show){ s.push('<text x="'+(x+BW/2)+'" y="'+(y+H/2+4)+'" font-size="11" fill="'+(final?"#caa24a":"#5f6b80")+'" text-anchor="middle">'+(final?"우승":"미정")+'</text>'); continue; }
-        var win=(m.state==="post"&&m.ga!=null&&m.gb!=null)?(m.ga>m.gb?0:(m.gb>m.ga?1:-1)):-1;
+        var win=(played&&m.ga!=null&&m.gb!=null)?(m.ga>m.gb?0:(m.gb>m.ga?1:-1)):-1;   // 종료=승자, 진행중=현재 우세팀(잠정)
         var rowY=[y+18,y+35],sides=[m.a,m.b],scs=[m.ga,m.gb];
         for(var sd=0;sd<2;sd++){var sk=sides[sd],isW=(win===sd);
           var tcol=sk.ab?(final?(isW?"#f0d27a":"#caa24a"):(isW?"#ffffff":"#cdd5e4")):"#6b7689";
@@ -325,9 +329,9 @@ tr.liverow .ab{color:#ff7a7a}
         var sa=(played&&m.ga!=null)?'<b class="ksc">'+esc(""+m.ga)+'</b>':"";
         var sb=(played&&m.gb!=null)?'<b class="ksc">'+esc(""+m.gb)+'</b>':"";
         var mid=m.state==="in"?'<span class="kmid klive">vs 🔴</span>':(m.state==="post"?'<span class="kmid">-</span>':'<span class="kmid kvs">vs</span>');
-        var win=(m.state==="post"&&m.ga!=null&&m.gb!=null)?(m.ga>m.gb?0:(m.gb>m.ga?1:-1)):-1;
+        var win=((m.state==="post"||m.state==="in")&&m.ga!=null&&m.gb!=null)?(m.ga>m.gb?0:(m.gb>m.ga?1:-1)):-1;
         var dt=m.t?new Date(m.t).toLocaleString("ko-KR",{month:"numeric",day:"numeric",hour:"2-digit",minute:"2-digit"}):"";
-        return '<div class="kmatch"><div class="krow">'
+        return '<div class="kmatch'+(m.state==="in"?" klive":"")+'"><div class="krow">'
           +'<span class="ka'+(win===0?" kwin":"")+'">'+koTeamH(m.a,true)+sa+'</span>'+mid
           +'<span class="kb'+(win===1?" kwin":"")+'">'+sb+koTeamH(m.b,false)+'</span></div>'
           +(dt?'<div class="kdt">'+esc(dt)+' KST</div>':"")+'</div>';

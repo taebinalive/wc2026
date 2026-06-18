@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="ko"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>2026 월드컵 조별 순위</title><!-- base generated: 2026-06-18 13:43 KST (화면 비표시·빌드 추적용) -->
+<title>2026 월드컵 조별 순위</title><!-- base generated: 2026-06-18 13:54 KST (화면 비표시·빌드 추적용) -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
@@ -414,13 +414,16 @@ tr.liverow .ab{color:#ff7a7a}
   function parse(data){var matches=[],live=[],sched=[],koMap={};(data.events||[]).forEach(function(ev){
     var c=(ev.competitions||[])[0];if(!c)return;
     var st=(c.status||{}).type||{},cs=c.competitors||[];if(cs.length!==2)return;
+    // 진행 중이면 절대 경기분(displayClock, 예 "73'")을 우선 — '후반 28'' 대신 '73''
+    var dc=(c.status||{}).displayClock||"";
+    var det=(st.state==="in"&&dc)?dc:(st.shortDetail||st.detail||"");
     var kt=Date.parse(ev.date||c.date||c.startDate);
     var type=(ev.season||{}).type;
     var home=cs.filter(function(x){return x.homeAway==="home";})[0]||cs[0];
     var away=cs.filter(function(x){return x.homeAway==="away";})[0]||cs[1];
     if(type===CFG.groupType){
       sched.push({t:kt,state:st.state});
-      var m={a:home.team.abbreviation,b:away.team.abbreviation,ga:parseInt(home.score,10)||0,gb:parseInt(away.score,10)||0,state:st.state,t:kt,detail:st.shortDetail||st.detail||""};
+      var m={a:home.team.abbreviation,b:away.team.abbreviation,ga:parseInt(home.score,10)||0,gb:parseInt(away.score,10)||0,state:st.state,t:kt,detail:det};
       var goals=[],det=c.details||[],hid=(home.team||{}).id,aid=(away.team||{}).id;
       for(var gi=0;gi<det.length;gi++){var x=det[gi];if(!x.scoringPlay)continue;
         var ath=x.athletesInvolved||[],nm=ath.length?(ath[0].shortName||ath[0].displayName||""):"";
@@ -439,7 +442,7 @@ tr.liverow .ab{color:#ff7a7a}
       var km={a:slotKo(home.team.abbreviation,(home.team||{}).displayName),
               b:slotKo(away.team.abbreviation,(away.team||{}).displayName),
               ga:scoreN(home.score),gb:scoreN(away.score),state:st.state,t:kt,
-              round:lab,detail:st.shortDetail||st.detail||"",goals:kg};
+              round:lab,detail:det,goals:kg};
       (koMap[type]=koMap[type]||{label:lab,type:type,matches:[]}).matches.push(km);
       if(st.state==="in")live.push({ko:true});   // 배너 카운트용
     }

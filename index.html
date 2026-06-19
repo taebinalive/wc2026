@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="ko"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>2026 월드컵 조별 순위</title><!-- base generated: 2026-06-19 10:02 KST (화면 비표시·빌드 추적용) -->
+<title>2026 월드컵 조별 순위</title><!-- base generated: 2026-06-19 11:08 KST (화면 비표시·빌드 추적용) -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
@@ -414,9 +414,11 @@ tr.liverow .ab{color:#ff7a7a}
   function parse(data){var matches=[],live=[],sched=[],koMap={};(data.events||[]).forEach(function(ev){
     var c=(ev.competitions||[])[0];if(!c)return;
     var st=(c.status||{}).type||{},cs=c.competitors||[];if(cs.length!==2)return;
-    // 진행 중이면 절대 경기분(displayClock, 예 "73'")을 우선 — '후반 28'' 대신 '73''
+    // 진행 중이면 절대 경기분(displayClock, 예 "73'"). 단 하프타임엔 시계가 전반끝에 멈추므로 상태 라벨 사용.
     var dc=(c.status||{}).displayClock||"";
-    var det=(st.state==="in"&&dc)?dc:(st.shortDetail||st.detail||"");
+    var sd=st.shortDetail||st.detail||"";
+    var det=sd;
+    if(st.state==="in") det=((st.name||"").indexOf("HALFTIME")>=0||sd==="HT")?"하프타임":(dc||sd);
     var kt=Date.parse(ev.date||c.date||c.startDate);
     var type=(ev.season||{}).type;
     var home=cs.filter(function(x){return x.homeAway==="home";})[0]||cs[0];
